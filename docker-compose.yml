@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    image: meter-settlement-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_PATH: /data/settlement.db
+    volumes:
+      - settlement-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  settlement-data:
